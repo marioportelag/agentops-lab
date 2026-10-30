@@ -1,0 +1,30 @@
+{
+  "name": "agentops-lab",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Reproducible evaluations of code changes against bundled tasks — the first step towards evaluating AI coding agents.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "evaluate": "node src/cli.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "npm run format:check && npm run typecheck && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marioportelag/agentops-lab.git"
+  },
+  "author": "Mario Portela",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "prettier": "^3.9.10",
+    "typescript": "~5.9.3",
+    "vitest": "^5.0.5"
+  }
+}
