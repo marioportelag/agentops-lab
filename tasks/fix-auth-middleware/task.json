@@ -1,0 +1,9 @@
+{
+  "id": "fix-auth-middleware",
+  "title": "Fix an authentication middleware that lets rejected requests through",
+  "testFile": "validation.test.ts",
+  "solutions": {
+    "buggy": "buggy.ts",
+    "reference": "solution.ts"
+  }
+}
