@@ -5,7 +5,6 @@
 **Reproducible evaluations for code changes — built to grow into a lab for evaluating AI coding agents.**
 
 [![CI](https://github.com/marioportelag/agentops-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/marioportelag/agentops-lab/actions/workflows/ci.yml)
-![version](https://img.shields.io/badge/version-0.1.0-0d1117?style=flat-square)
 ![license](https://img.shields.io/badge/license-MIT-0d1117?style=flat-square)
 
 </div>
