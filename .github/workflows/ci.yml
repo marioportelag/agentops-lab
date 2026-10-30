@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Least privilege: the workflow only reads the repository.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 24]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      - name: Evaluate bundled solutions
+        run: |
+          npm run evaluate -- --task fix-auth-middleware --solution buggy
+          npm run evaluate -- --task fix-auth-middleware --solution reference
+
+      - name: Check evaluation verdicts
+        run: |
+          node --input-type=module -e "
+            import { readdirSync, readFileSync } from 'node:fs';
+            const reports = readdirSync('reports')
+              .filter((file) => file.endsWith('.json'))
+              .map((file) => JSON.parse(readFileSync('reports/' + file, 'utf8')));
+            const verdict = (id) => reports.find((report) => report.solution.id === id)?.result;
+            console.log('buggy:', verdict('buggy'), '| reference:', verdict('reference'));
+            if (verdict('reference') !== 'PASS' || !['PARTIAL', 'FAIL'].includes(verdict('buggy'))) {
+              process.exit(1);
+            }
+          "
