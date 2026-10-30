@@ -1,0 +1,12 @@
+node_modules/
+coverage/
+*.log
+.env
+.env.*
+
+# Evaluation reports are local artefacts.
+reports/*
+!reports/.gitkeep
+
+# Temporary solution files created by the runner tests.
+tasks/**/.tmp-*
